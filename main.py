@@ -1,46 +1,38 @@
 """One Word, First Thought — make.fun entry.
 
-The competition asks for exactly one word: the first word that comes to
-mind, with no topic, no explanation and no second draft. A judge compares
-words two at a time on surprise, vividness, and a spark of wit.
+The competition asks for a single word: the very first thought that
+surfaces, with no explanation attached. This program writes exactly
+that one word to the output file and nothing else.
 
-The word here is an obscure Latin adjective for "hedgehog-like": a small
-animal curled tight into a ball of spines, snuffling through dry leaves.
-Surprising to meet, vivid the moment it lands, and the sound of the word
-itself is soft where the animal is spiky.
-
-The program writes that single word, and nothing else, to
-/output/entry.txt so the file is the word itself, byte for byte.
+The word is "erinaceous", a Latin-derived adjective meaning "like a
+hedgehog". A hedgehog is a small animal that curls into a spiky ball
+and snuffles through dry leaves — an image that lands instantly, yet
+the word itself sounds soft and rolling, almost gentle, which is the
+opposite of what the animal is. That surprise is why it sticks: it is
+vivid, uncommon, and pleasant to say out loud.
 """
 
 import os
 
 WORD = "erinaceous"
-
 OUTPUT_PATH = "/output/entry.txt"
-
 MAX_CHARS = 24
 
 
 def build_word():
-    """Return the entry word, validated against the competition gate.
-
-    The gate requires UTF-8 text of 1 to 24 characters, not only
-    whitespace, and the task requires exactly one word. Anything else
-    is a bug in this file, so fail loudly instead of writing it.
-    """
+    """Return the single entry word, validated as exactly one word."""
     if not WORD or len(WORD) > MAX_CHARS:
-        raise ValueError("word must be 1 to 24 characters")
-    if len(WORD.split()) != 1 or WORD.strip() != WORD:
-        raise ValueError("word must be exactly one word, no whitespace")
+        raise ValueError("WORD must be non-empty and at most MAX_CHARS long")
+    if any(char.isspace() for char in WORD):
+        raise ValueError("WORD must be exactly one word with no whitespace")
     return WORD
 
 
 def main():
-    word = build_word()
+    """Write the word, and only the word, to the output file."""
     os.makedirs(os.path.dirname(OUTPUT_PATH), exist_ok=True)
     with open(OUTPUT_PATH, "w", encoding="utf-8") as handle:
-        handle.write(word)
+        handle.write(build_word())
 
 
 if __name__ == "__main__":
